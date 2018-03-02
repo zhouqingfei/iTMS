@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.ReportLogDao">
+
+    <resultMap id="reportLog_map" type="ReportLog">
+        <id property="logId" column="log_id"/>
+        <result property="logNumber" column="log_number"/>
+        <result property="logName" column="log_name"/>
+        <result property="loginId" column="login_id"/>
+        <result property="modifyTime" column="log_modify_time"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="reportLog_map">
+        SELECT * FROM log
+    </select>
+    <select id="search" parameterType="String" resultMap="reportLog_map">
+		SELECT * FROM log where (log_id like #{value}) or (log_number like #{value}) or (log_name like #{value}) or (log_modify_time like #{value})
+	</select>
+<select id="findAllTester" parameterType="String" resultMap="reportLog_map">
+        SELECT * FROM log where login_id=#{value}
+    </select>
+    <select id="findReportLogById" parameterType="int" resultMap="reportLog_map">
+        SELECT * FROM test_case WHERE id = #{value}
+    </select>
+    
+    <insert id="add" parameterType="ReportLog"> 
+          INSERT INTO log(log_number,log_name,login_id,log_modify_time)VALUES(#{logNumber},#{logName},#{loginId},#{modifyTime})
+    </insert>
+    
+     <delete id="delete" parameterType="int">
+        DELETE FROM log WHERE log_id=#{value}
+    </delete>
+     
+    
+</mapper>

@@ -1,0 +1,209 @@
+@CHARSET "UTF-8";
+
+a:visited {
+	color: blue
+}
+
+.easyui-linkbutton:visited {
+	color: #444444
+}
+
+body {
+	font-size: 12px !important;
+}
+
+.baseForm {
+	font-size: 12px;
+}
+
+.baseTable td {
+	font-size: 12px;
+	height: 18px;
+}
+
+.xxx table td {
+	font-size: 12px;
+	height: 18px;
+}
+
+textarea {
+	font-size: 12px;
+	font-family:"微软雅黑", "宋体", Arial, sans-serif, Verdana, Tahoma;
+}
+
+.baseUl {
+	list-style: none;
+}
+
+.baseUl li {
+	margin-top: 20px;
+}
+
+.bordertable th,.bordertable td {
+	line-height: 2;
+	padding: 0, 4px;
+	vertical-align: top;
+}
+
+.innerTable th,.innerTable td {
+	padding: 0 4px;
+}
+
+.datagrid-toolbar input {
+	padding: 0.5px 2px；
+}
+
+table.bordertable {
+	border-bottom: 1px solid #CCCCCC;
+	border-collapse: collapse;
+	border-top: 1px solid #CCCCCC;
+	color: #333333;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	border: 1px solid #CCCCCC;
+	background-color: rgb(234, 244, 253);
+}
+
+.bordertable thead th {
+	color: #000000;
+	text-align: left;
+	vertical-align: middle;
+	background: none repeat scroll 0 0 #E0E0E0;
+	border-bottom: 1px dotted rgb(141, 177, 209);
+	border-right: 1px solid rgb(141, 177, 209);
+}
+/*
+.bordertable th {
+	color: #000000;
+	text-align: left;
+	vertical-align: middle;
+	background: none repeat scroll 0 0 #E0E0E0;
+	border-bottom: 1px dotted rgb(141, 177, 209);
+	border-right: 1px solid rgb(141, 177, 209);
+}
+*/
+.bordertable tbody td {
+	border-top: 1px solid rgb(141, 177, 209);
+	border-left: 1px solid rgb(141, 177, 209);
+	border-right: 1px solid rgb(141, 177, 209);
+	text-align: left;
+	vertical-align: middle;
+	border-color: #CCCCCC;
+	/*border-color: #928484;*/
+	/*padding-left: 10px;*/
+}
+
+.bordertable input {
+	font-size: 12px;
+}
+
+.bordertable select {
+	font-size: 12px;
+}
+
+.tableLable {
+	/*background: #EEF0F2;*/
+	background-color: rgb(205, 222, 238);
+	width: 120px;
+	padding-left: 10px;
+}
+
+.tdContent {
+	padding-left: 10px;
+	width: 600px;
+}
+
+.bordertableTdContent {
+	padding-left: 2px;
+	width: 300px;
+}
+
+.tdInput {
+	width: 290px;
+	padding-left: 2px;
+}
+
+.inputCustomizedjp {
+	width: 360px;
+	padding-left: 2px;
+}
+
+.inputCustomized {
+	width: 400px
+}
+
+.textLength {
+	width: 600px;
+}
+
+.createTitle {
+	font-size: 3;
+}
+
+.firstcolumn {
+	width: 250px;
+}
+
+.searchStyle {
+	text-align: right;
+	width: 80px;
+}
+
+.pjtableTitle {
+	background-color: rgb(205, 222, 238);
+	width: 130px;
+	padding-left: 10px;
+}
+
+.pjtableContent {
+	padding-left: 1px;
+	width: 200px;
+}
+
+.matrixTd {
+	border-bottom: 1px solid #CCCCCC;
+	border-collapse: collapse;
+	border-top: 1px solid #CCCCCC;
+	color: #333333;
+	margin: 10px;
+	padding: 0px;
+	border: 0px solid #CCCCCC;
+	background-color: rgb(234, 244, 253);
+}
+
+.matrixTd thead th {
+	color: #000000;
+	text-align: left;
+	vertical-align: middle;
+	background: none repeat scroll 0 0 #E0E0E0;
+	border-bottom: 1px dotted rgb(141, 177, 209);
+	border-right: 1px solid rgb(141, 177, 209);
+}
+
+.matrixTd tbody td {
+	border-top: 1px solid rgb(141, 177, 209);
+	border-left: 1px solid rgb(141, 177, 209);
+	border-right: 1px solid rgb(141, 177, 209);
+	text-align: center;
+	vertical-align: middle;
+	border-color: #CCCCCC;
+	/*border-color: #928484;*/
+	/*padding-left: 10px;*/
+	font-size: 12px;
+	height: 60px;
+	width : 100px;
+	line-height: 2;
+	padding: 0, 4px;
+	word-wrap:break-word;
+	word-break:break-all;
+}
+
+.cTextarea {
+	font-size: 12px;
+	height: 20px;
+}
+.saveAs{
+	float:left; 
+	margin-left:10px;
+}

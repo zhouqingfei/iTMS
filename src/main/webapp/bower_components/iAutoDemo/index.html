@@ -1,0 +1,78 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+	    <title>index</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/page_common.js"></script>
+	    <link href="css/common_style_blue.css" rel="stylesheet" type="text/css" />
+		
+		<style type="text/css">
+			body {margin: 0;}
+			#Head_1 {background-color:#0070C0;height:80px;margin: 0 auto;width:100%;}
+			#nav{ width:1000px; height:100px;position:relative;margin-top: -75px;z-index:99;}  
+			#nav ul{list-style:none;float:right;}  
+			#nav ul li{ float:left;line-height:40px; text-align:center;padding:0px 20px;}  
+			#nav ul li a{ text-decoration:none; color:#000; display:block;padding:0px 10px;font-size:16px;}  
+			#nav ul li a:hover{ color:white;}  
+			#nav ul li ul{ position:absolute; display:none;bolder:1px solid;border-radius:3px;}  
+			#nav ul li ul li{ float:none; line-height:30px; text-align:left;width:100%;margin-left:-60px;background-color:#0070C0;}
+			#nav ul li ul li a{ width:100%;}  
+			#nav ul li ul li a:hover{ background-color:#06f;}  
+			#nav ul li:hover ul{ display:block;}
+			#test {height: 500px;margin: 0 auto;width: 100%;}
+			#middleContent { position:relative;top:5px;height: 500px;margin: 0 auto;width: 100%;z-index:1;}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="Head_1">
+			<img src="images/iAuto.png" width="112" height="45" style="margin-top: 20px;margin-left: 20px;"/>
+			
+			<div id="nav">						
+					<ul>   
+						<li>
+							<img src="images/frontPage.png" width="30" height="30" style="margin-top: 10px;"/>
+							<a target="middle" href="detail/frontpage.html">首页</a>     
+						</li>
+						
+						<li>
+							<img src="images/userManagement.png" width="30" height="30" style="margin-top: 10px;"/>
+							<a href="#">用户管理</a>    
+						</li> 
+						
+						<li>
+							<img src="images/machine.png" width="30" height="30" style="margin-top: 10px;"/>
+							<a href="#">机器管理</a> 
+                            <ul>  
+								<li><a target="middle" href="detail/machine.html">机器管理</a></li>  
+								<li><a href="#">新增机器</a></li>													
+							</ul>   							
+						</li> 
+
+						<li>
+							<img src="images/task.png" width="30" height="30" style="margin-top: 10px;"/>
+							<a href="#"">任务管理</a>  
+							<ul>  
+								<li><a target="middle" href="detail/testTaskAdmin.html">测试任务管理</a></li>
+								<li><a target="middle" href="detail/testSuitAdmin.html">测试套件管理</a></li>
+							    <li><a target="middle" href="detail/testCaseAdmin.html">测试案例管理</a></li>  
+							</ul>          
+						</li> 
+                        
+                        <li>
+							<img src="images/resource.png" width="30" height="30" style="margin-top: 10px;"/>
+							<a href="#">资源管理</a>    
+						</li> 	
+						
+						<li>
+							<img src="images/report.png" width="30" height="30" style="margin-top: 10px;"/>
+							<a href="#">报告管理</a>    
+						</li> 							
+					</ul>  	  
+			</div>
+		</div>
+		<div id="middleContent"><iframe id="test" noresize name="middle" src="detail/frontPage.html" scrolling="yes"/></div>
+	</body>
+</html>

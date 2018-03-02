@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.UserTmpDao">
+
+	<resultMap id="userTmp_map" type="User">
+		<id property="userId" column="user_id" />
+		<result property="password" column="password" />
+		<result property="roleIdsStr" column="role_ids" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="qq" column="qq" />
+		<result property="weChat" column="weChat" />
+		<result property="loginId" column="loginId" />
+
+	</resultMap>
+	
+	<select id="findAll" resultMap="userTmp_map">
+		SELECT * FROM user_tmp 
+	</select>
+
+	<select id="findById" parameterType="String" resultMap="userTmp_map">
+		SELECT * FROM user_tmp WHERE user_id = #{value}
+	</select>
+<!-- 
+	<update id="update" parameterType="User">
+		UPDATE user SET password = #{password} ,authority = #{authority} WHERE
+		user_id = #{userId}
+	</update>
+
+	<update id="updatePassword" parameterType="map">
+		UPDATE user SET password = #{password} WHERE user_id = #{userId}
+	</update>
+ -->
+	<insert id="add" parameterType="User">
+		INSERT INTO user_tmp(user_id,password,role_ids,phone,email,qq,weChat,loginId)
+		VALUES(#{userId},#{password},#{roleIdsStr},#{phone},#{email},#{qq},#{weChat},#{loginId})
+	</insert>
+
+	<!-- <select id="findByIdAndPassword" parameterType="map" resultMap="user_map">
+		SELECT * FROM user WHERE user_id = #{id} AND password = #{password}
+	</select>
+ -->
+	<delete id="delete" parameterType="String">
+		DELETE FROM user_tmp WHERE user_id = #{value}
+	</delete> 
+
+
+</mapper>

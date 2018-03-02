@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.TestTaskDao">
+
+    <resultMap id="testTask_map" type="TestTask">
+        <id property="id" column="test_task_id"/>
+        <result property="testTaskName" column="test_task_name"/>
+        <result property="suitName" column="suit_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="testTaskState" column="test_task_state"/>
+        <result property="loginId" column="login_id"/>
+        <result property="result" column="result"/>
+        <result property="process" column="process"/>   
+        <result property="specialCaseName" column="special_case_name"/>
+        <result property="machineType" column="machine_type"/>
+        <result property="testCategory" column="test_category"/>
+        <result property="testTaskDescribe" column="test_task_describe"/>
+        <result property="poolType" column="pool_type"/>
+        <result property="poolSuitOrCase" column="pool_suit_or_case"/>
+        <result property="machineCategory" column="machine_category"/>
+        <result property="temInfo" column="tem_info"/>
+        <result property="sutInfo" column="sut_info"/>
+        <result property="testCaseCount" column="test_case_count"/>
+        <result property="testCaseInfo" column="test_case_info"/>
+        
+    </resultMap>
+
+    <select id="findAll" parameterType="String" resultMap="testTask_map">
+      SELECT * FROM test_task Where login_id=#{value} 
+    </select>
+    
+    <select id="search" parameterType="String" resultMap="testTask_map">
+		SELECT * FROM test_task where  (test_task_id like #{value}) or (test_task_name like #{value}) or (pool_suit_or_case like #{value}) or (test_task_state like #{value}) or (result like #{value})
+	</select>
+    
+     <select id="findTestTaskById" parameterType="int" resultMap="testTask_map">
+        SELECT * FROM test_task Where test_task_id=#{value}
+    </select>
+
+<!--     <select id="findTestCaseById" parameterType="int" resultMap="testCase_map"> -->
+<!--         SELECT * FROM test_case WHERE id = #{value} -->
+<!--     </select> -->
+    
+    <insert id="add" parameterType="TestTask">
+           INSERT INTO test_task(test_task_id,test_task_name,suit_name,start_time,end_time,test_task_state,login_id,result,process,special_case_name,machine_type,test_category,test_task_describe,pool_type,pool_suit_or_case,machine_category,tem_info,sut_info,test_case_count,test_case_info) 
+           VALUES(#{id},#{testTaskName},#{suitName},#{startTime},#{endTime},#{testTaskState},#{loginId},#{result},#{process},#{specialCaseName},#{machineType},#{testCategory},#{testTaskDescribe},#{poolType},#{poolSuitOrCase},#{machineCategory},#{temInfo},#{sutInfo},#{testCaseCount},#{testCaseInfo})
+           
+    </insert>
+     
+     <delete id="delete" parameterType="int">
+        DELETE FROM test_task WHERE test_task_id=#{value}
+    </delete>
+    
+      <update id="update" parameterType="testTask">
+        UPDATE test_task SET test_task_name = #{testTaskName} , special_case_name = #{specialCaseName} , machine_type = #{machineType} ,  test_category = #{testCategory} ,  test_task_describe = #{testTaskDescribe} ,  pool_type = #{poolType} ,  pool_suit_or_case = #{poolSuitOrCase} ,  tem_info = #{temInfo} , sut_info = #{sutInfo} , test_case_info = #{testCaseInfo} , test_task_state = #{testTaskState} , result = #{result} , process = #{process} , start_time = #{startTime} , end_time = #{endTime} WHERE test_task_id = #{id}
+    </update>
+    
+    <select id="getPassCount" parameterType="String" resultType="java.lang.Integer"> 
+    	<!-- <![CDATA[SELECT count(*) FROM test_task Where result="PASS" and login_id=#{value} and ( DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(start_time))]]>   -->
+    	SELECT count(*) FROM test_task Where result="PASS" and login_id=#{value}
+    </select>
+
+	<select id="getFailCount" parameterType="String" resultType="java.lang.Integer"> 
+		<!-- <![CDATA[SELECT count(*) FROM test_task Where result="FAIL" and login_id=#{value} and ( DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(start_time))]]>   -->
+		SELECT count(*) FROM test_task Where result="FAIL" and login_id=#{value}
+	</select>
+
+	<select id="getTbdCount" parameterType="String" resultType="java.lang.Integer"> 
+		<!-- <![CDATA[SELECT count(*) FROM test_task Where result="TBD"  and login_id=#{value} and ( DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(start_time))]]>   -->
+		SELECT count(*) FROM test_task Where result="TBD" and login_id=#{value}
+	</select>
+
+	<select id="getFinishedCount" parameterType="String" resultType="java.lang.Integer"> 
+		<!-- <![CDATA[SELECT count(*) FROM test_task Where test_task_state="Finished" and login_id=#{value} and ( DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(start_time))]]>    -->
+		SELECT count(*) FROM test_task Where test_task_state="Finished" and login_id=#{value}
+	</select>
+
+	<select id="getRunningCount" parameterType="String" resultType="java.lang.Integer"> 
+		<!-- <![CDATA[SELECT count(*) FROM test_task Where test_task_state="Running" and login_id=#{value} and ( DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(start_time))]]>    -->
+		SELECT count(*) FROM test_task Where test_task_state="Running" and login_id=#{value}
+	</select>
+
+	<select id="getReadyCount" parameterType="String" resultType="java.lang.Integer"> 
+		SELECT count(*) FROM test_task Where test_task_state="Ready" and login_id=#{value} 
+	</select>
+
+	<select id="getStopCount" parameterType="String" resultType="java.lang.Integer"> 
+		<!-- <![CDATA[SELECT count(*) FROM test_task Where test_task_state="Stop" and login_id=#{value} and ( DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(start_time))]]> -->
+		SELECT count(*) FROM test_task Where test_task_state="Stop" and login_id=#{value}
+	</select>
+</mapper>

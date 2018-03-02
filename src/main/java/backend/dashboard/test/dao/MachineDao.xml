@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.MachineDao">
+
+     <resultMap id="Machine_map" type="Machine">
+        <result property="mac" column="MAC"/>
+        <result property="ip" column="IP"/>
+        <result property="time" column="Time"/>
+        <result property="addr" column="Addr"/> 
+        <result property="user_id" column="user_id"/>            
+    </resultMap>
+
+    <select id="findAll" resultMap="Machine_map">
+        SELECT * FROM machine_scan WHERE user_id=#{value}
+    </select>
+    <select id="findMachineByMAC" resultMap="Machine_map">
+        SELECT * FROM machine_scan WHERE MAC=#{0} and user_id=#{1}
+    </select>
+    <insert id="add" parameterType="Machine">
+        INSERT INTO machine_scan(MAC,IP,Time,Addr,user_id) VALUES(#{mac},#{ip},#{time},#{addr},#{user_id})
+    </insert>
+    <delete id="delete" parameterType="String">
+        DELETE FROM machine_scan WHERE user_id=#{value}
+    </delete>
+    <update id="update" parameterType="Machine">
+        UPDATE machine_scan SET IP = #{ip}  WHERE MAC = #{mac}
+    </update>
+</mapper>

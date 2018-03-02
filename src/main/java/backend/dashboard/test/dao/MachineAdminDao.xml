@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.MachineAdminDao">
+
+    <resultMap id="MachineAdmin_map" type="MachineAdmin">
+         <result property="model" column="Model"/>
+        <result property="type" column="Type"/>
+        <result property="status" column="Status"/>
+         <result property="line_status" column="Line_Status"/>
+        <result property="os" column="OS"/>
+        <result property="bios_ver" column="BIOS_Ver"/>
+        <result property="bmc_ver" column="BMC_Ver"/>
+        <result property="host_mac" column="Host_MAC"/>
+        <result property="host_ip" column="Host_IP"/>
+        <result property="bmc_mac" column="BMC_MAC"/>
+        <result property="bmc_ip" column="BMC_IP"/>
+        <result property="time" column="Time"/>
+        <result property="addr" column="Addr"/>        
+        <result property="user" column="User"/>
+        <result property="user_id" column="user_id"/>
+        <result property="bmc_user" column="BMC_User"/>
+        <result property="bmc_psd" column="BMC_Psd"/>
+        <result property="comment" column="Comment"/>     
+    </resultMap>
+
+    <select id="findTem" resultMap="MachineAdmin_map">
+        SELECT * FROM machine_info WHERE Type="TEM"
+    </select>
+    <select id="findSut" resultMap="MachineAdmin_map">
+        SELECT * FROM machine_info WHERE Type="SUT"
+    </select>
+    <insert id="add" parameterType="MachineAdmin">
+        INSERT INTO machine_info(Model,Type,Status,Line_Status,OS,BIOS_Ver,BMC_Ver,Host_MAC,Host_IP,BMC_MAC,BMC_IP,Time,Addr,User,user_id,BMC_User,BMC_Psd,Comment) VALUES(#{model},#{type},#{status},#{line_status},#{os},#{bios_ver},#{bmc_ver},#{host_mac},#{host_ip},#{bmc_mac},#{bmc_ip},#{time},#{addr},#{user},#{user_id},#{bmc_user},#{bmc_psd},#{comment})
+    </insert>
+    <select id="findMachineByMAC" resultMap="MachineAdmin_map">
+        SELECT * FROM machine_info WHERE BMC_MAC=#{value} or Host_MAC=#{value}
+    </select>
+    <select id="findMachineByUser" resultMap="MachineAdmin_map">
+        SELECT * FROM machine_info WHERE (User=#{value} or user_id=#{value})AND Type="SUT"
+    </select>
+      <select id="findTemByAddr" resultMap="MachineAdmin_map">
+        SELECT * FROM machine_info WHERE Addr=#{value} AND Type="TEM"
+    </select>
+    <select id="findSutByAddr" resultMap="MachineAdmin_map">
+        SELECT * FROM machine_info WHERE Addr=#{value}  AND Type="SUT"
+    </select>
+     <update id="update" parameterType="MachineAdmin">
+        UPDATE machine_info SET Model = #{model},Type = #{type},Line_Status = #{line_status},OS = #{os},BIOS_Ver = #{bios_ver},BMC_Ver = #{bmc_ver},BMC_MAC=#{bmc_mac},BMC_IP=#{bmc_ip},Time=#{time},User=#{user},BMC_User=#{bmc_user},BMC_Psd=#{bmc_psd},Comment=#{comment}  WHERE Host_MAC = #{host_mac}
+    </update>
+     <delete id="delete" parameterType="String">
+        DELETE FROM machine_info WHERE Host_MAC=#{value}
+    </delete>
+</mapper>

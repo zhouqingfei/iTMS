@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.ItmsTestCaseDao">
+
+	<resultMap id="itmsTestCase_map" type="ItmsTestCase">
+		<id property="id" column="itms_test_case_id" />
+		<result property="name" column="itms_test_case_name" />
+		<result property="number" column="itms_test_case_number" />
+		<result property="version" column="itms_test_case_version" />
+		<result property="writer" column="itms_test_case_writer" />
+		<result property="category1" column="itms_test_case_category1" />
+		<result property="category2" column="itms_test_case_category2" />
+		<result property="category3" column="itms_test_case_category3" />
+		<result property="level" column="itms_test_case_level" />
+		<result property="product" column="itms_test_case_product" />
+		<result property="manualtime" column="itms_test_case_manualtime" />
+		<result property="autotime" column="itms_test_case_autotime" />
+		<result property="status" column="itms_test_case_status" />
+		<result property="versionchangelog" column="itms_test_case_versionchangelog" />
+		<result property="condition" column="itms_test_case_condition" />
+		<result property="comment" column="itms_test_case_comment" />
+		<result property="autoconnect" column="itms_test_case_autoconnect" />
+		<result property="step" column="itms_test_case_step" />
+		<result property="expect" column="itms_test_case_expect" />
+		<result property="script" column="itms_test_case_script" />
+		<result property="param" column="itms_test_case_param" />
+        <result property="ip" column="itms_test_case_ip" />
+        <result property="script_status" column="itms_test_case_script_status" />
+        <result property="result" column="itms_test_case_result" />
+        <result property="result_location" column="itms_test_case_result_location" />
+	</resultMap>
+
+	<select id="findAll" resultMap="itmsTestCase_map">
+		SELECT * FROM itms_test_case
+	</select>
+
+	<insert id="add" parameterType="ItmsTestCase">
+		INSERT INTO
+		itms_test_case(itms_test_case_id,itms_test_case_name,itms_test_case_number,itms_test_case_version,itms_test_case_writer,itms_test_case_category1,itms_test_case_category2,itms_test_case_category3,itms_test_case_level,itms_test_case_product,itms_test_case_manualtime,itms_test_case_autotime,itms_test_case_status,itms_test_case_versionchangelog,itms_test_case_condition,itms_test_case_comment,itms_test_case_autoconnect,itms_test_case_step,itms_test_case_expect)
+		VALUES(#{id},#{name},#{number},#{version},#{writer},#{category1},#{category2},#{category3},#{level},#{product},#{manualtime},#{autotime},#{status},#{versionchangelog},#{condition},#{comment},#{autoconnect},#{step},#{expect})
+	</insert>
+	
+	<!-- <select id="findByPagination" resultMap="itmsTestCase_map">
+		SELECT * FROM itms_test_case limit (#{currentPage}-1)*#{pageSize},#{pageSize};
+	</select> -->
+	
+	<select id="findByPagination" resultMap="itmsTestCase_map">
+		SELECT * FROM itms_test_case LIMIT #{0},#{1};
+	</select>
+	
+	<select id="findById" resultMap="itmsTestCase_map">
+		select * from itms_test_case where itms_test_case_id = #{0}
+	</select>
+	
+	<update id="updateScriptInfo" parameterType="ItmsTestCase">
+		update itms_test_case set itms_test_case_script=#{script}, itms_test_case_param=#{param}, itms_test_case_ip=#{ip} where itms_test_case_id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.TestSuitDao">
+
+	<resultMap id="testSuit_map" type="TestSuit">
+		<id property="id" column="test_suit_id" />
+		<result property="testSuitName" column="test_suit_name" />
+		<result property="temSut" column="tem_suit" />
+		<result property="testSuitCategory" column="test_suit_category" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="userLoginId" column="login_id" />
+		<result property="testCaseInfo" column="test_case_info" />
+		<result property="testSuitDescribe" column="test_Suit_describe" />
+		<result property="testSuitExplain" column="test_suit_explain" />
+	</resultMap>
+
+	<select id="findAll" resultMap="testSuit_map">
+		SELECT * FROM test_suit
+	</select>
+	
+	<select id="search" resultMap="testSuit_map">
+		SELECT * FROM test_suit where (test_suit_id like #{value}) or (test_suit_name like #{value}) or (tem_suit like #{value}) or (test_suit_category like #{value})
+	</select>
+	
+	<select id="findSuitById" parameterType="int" resultMap="testSuit_map">
+		SELECT * FROM test_suit WHERE test_suit_id = #{value}
+	</select>
+	<insert id="add" parameterType="TestSuit">
+		INSERT INTO
+		test_suit(test_suit_id,test_suit_name,tem_suit,test_suit_category,modify_time,login_id,test_case_info,test_suit_describe,test_suit_explain)
+		VALUES(#{id},#{testSuitName},#{temSut},#{testSuitCategory},#{modifyTime},#{userLoginId},#{testCaseInfo},#{testSuitDescribe},#{testSuitExplain})
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM test_suit WHERE test_suit_id=#{value}
+	</delete>
+	
+	<update id="update" parameterType="TestSuit">
+		UPDATE test_suit SET test_suit_name = #{testSuitName} , tem_suit=#{temSut} , test_suit_category=#{testSuitCategory} , modify_time=#{modifyTime}  , test_case_info=#{testCaseInfo} , test_suit_describe=#{testSuitDescribe} , test_suit_explain=#{testSuitExplain} WHERE test_suit_id = #{id}
+	</update>
+
+</mapper>

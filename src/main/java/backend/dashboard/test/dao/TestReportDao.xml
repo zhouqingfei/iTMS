@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.TestReportDao">
+
+    <resultMap id="report_map" type="TestReport">
+        <id property="reportId" column="report_id"/>
+        <result property="reportNumber" column="report_number"/>
+        <result property="reportName" column="report_name"/>
+        <result property="loginId" column="login_id"/>
+        <result property="modifyTime" column="report_modify_time"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="report_map">
+        SELECT * FROM report
+    </select>
+<select id="search" parameterType="String" resultMap="report_map">
+		SELECT * FROM report where (report_id like #{value}) or (report_number like #{value}) or (report_name like #{value}) or (report_modify_time like #{value})
+	</select>
+<select id="findAllTester" parameterType="String" resultMap="report_map">
+        SELECT * FROM report where login_id=#{value}
+    </select>
+    <select id="findRecentReport" parameterType="String" resultMap="report_map">
+        SELECT * FROM report where report_number=#{value} ORDER BY report_modify_time desc LIMIT 1
+    </select>
+    <select id="findReportLogById" parameterType="int" resultMap="report_map">
+        SELECT * FROM test_case WHERE id = #{value}
+    </select>
+    
+    <insert id="add" parameterType="TestReport"> 
+          INSERT INTO report(report_number,report_name,login_id,report_modify_time)VALUES(#{reportNumber},#{reportName},#{loginId},#{modifyTime})
+    </insert>
+    
+     <delete id="delete" parameterType="int">
+        DELETE FROM report WHERE report_id=#{value}
+    </delete>
+     
+    
+</mapper>

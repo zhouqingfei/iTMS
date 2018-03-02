@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="backend.dashboard.test.dao.TestCaseDao">
+
+	<resultMap id="testCase_map" type="TestCase">
+		<id property="id" column="id" />
+		<result property="testCaseName" column="test_case_name" />
+		<result property="temSut" column="tem_sut" />
+		<result property="testCaseId" column="test_case_id" />
+		<result property="testCategory" column="test_category" />
+		<result property="testCaseDescribe" column="test_case_describe" />
+		<result property="scriptConfigName" column="script_config_name" />
+		<result property="scriptConfigSrcPath" column="script_config_src_path" />
+		<result property="scriptConfigDesPath" column="script_config_des_path" />
+		<result property="scriptConfigParm" column="script_config_parm" />
+		<result property="userLoginId" column="user_login_id" />
+		<result property="testSuitId" column="test_suit_id" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="logPath" column="log_path" />
+		<result property="scriptRecordType" column="script_record_type" />
+		<result property="scriptExplain" column="script_explain" />
+	</resultMap>
+
+	<select id="findAll" resultMap="testCase_map">
+		SELECT * FROM test_case
+	</select>
+	
+   <select id="search" resultMap="testCase_map">
+		SELECT * FROM test_case where (test_case_name like #{value}) or (id like #{value}) or (tem_sut like #{value}) or (test_case_id like #{value}) or (test_category like #{value})
+	</select>
+
+	<select id="findTestCaseById" parameterType="int" resultMap="testCase_map">
+		SELECT * FROM test_case WHERE id = #{value}
+	</select>
+	<insert id="add" parameterType="TestCase">
+		INSERT INTO
+		test_case(id,test_case_name,tem_sut,test_case_id,test_category,test_case_describe,script_config_name,script_config_src_path,script_config_des_path,log_path,script_config_parm,user_login_id,test_suit_id,modify_time,script_record_type,script_explain)
+		VALUES(#{id},#{testCaseName},#{temSut},#{testCaseId},#{testCategory},#{testCaseDescribe},#{scriptConfigName},#{scriptConfigSrcPath},#{scriptConfigDesPath},#{logPath},#{scriptConfigParm},#{userLoginId},#{testSuitId},#{modifyTime},#{scriptRecordType},#{scriptExplain})
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM test_case WHERE id=#{value}
+	</delete>
+
+	<update id="update" parameterType="TestCase">
+		UPDATE test_case SET test_case_name = #{testCaseName} , tem_sut = #{temSut}
+		, test_case_id = #{testCaseId} , test_category = #{testCategory} ,
+		test_case_describe = #{testCaseDescribe} ,  script_config_name = #{scriptConfigName} ,  script_config_src_path = #{scriptConfigSrcPath} ,  script_config_des_path = #{scriptConfigDesPath} ,  log_path = #{logPath} ,  script_config_parm = #{scriptConfigParm} ,  test_suit_id = #{testSuitId} ,  modify_time = #{modifyTime} ,  script_record_type = #{scriptRecordType} ,  script_explain = #{scriptExplain}         WHERE id = #{id}
+	</update>
+
+</mapper>
