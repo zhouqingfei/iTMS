@@ -33,19 +33,16 @@ public class ProjectAndRoundBizImpl implements ProjectAndRoundBiz {
 
 	@Override
 	public List<ProjectAndRound> findAll() {
-		// TODO 自动生成的方法存根
 		return projectAndRoundDao.findAll();
 	}
 
 	@Override
 	public void update(ProjectAndRound projectAndRound) {
-		// TODO 自动生成的方法存根
 		projectAndRoundDao.update(projectAndRound);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO 自动生成的方法存根
 		projectAndRoundDao.deleteByParentId(id);
 		projectAndRoundDao.delete(id);
 	}

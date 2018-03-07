@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="backend.dashboard.test.dao.ItmsTestCaseTreeDao">
+
+	<resultMap id="BaseResultMap" type="ItmsTestCaseTree">
+		<id property="id" column="id"/>
+		<result property="parent_id"  column="parent_id"/>
+		<result property="name" column="name"  />
+		<result property="type" column="type"  />
+		<result property="testCaseList"  column="testCaseList"/>
+		<result property="checked" column="checked"/>
+		<result property="url" column="url" />
+		<result property="icon" column="icon" />
+	</resultMap>
+
+	<select id="getChildrenByPid" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM itms_test_case_tree WHERE parent_id = #{value}
+	</select>
+	
+	<select id="getRoot" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM itms_test_case_tree WHERE parent_id = 0
+	</select>
+	
+	<select id="save" parameterType="ItmsTestCaseTree">
+		INSERT INTO
+		itms_test_case_tree(parent_id,name,type,testCaseList,checked,url,icon)
+		VALUES(#{parent_id},#{name},#{type},#{testCaseList},#{checked},#{url},#{icon})
+	</select>
+	
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT * FROM itms_test_case_tree
+	</select>
+	
+	
+	<update id="update" parameterType="ItmsTestCaseTree">
+		UPDATE itms_test_case_tree SET name = #{name} WHERE id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		DELETE FROM itms_test_case_tree WHERE id=#{value}
+	</delete>
+	
+	<delete id="deleteByParentId" parameterType="int">
+		DELETE FROM itms_test_case_tree WHERE parent_id=#{value}
+	</delete>
+</mapper>

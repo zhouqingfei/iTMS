@@ -36,7 +36,7 @@ public class ProjectAndRoundController {
 		String id = request.getParameter("id");
 		List<ProjectAndRoundDTO> dtoList = new ArrayList<ProjectAndRoundDTO>();
 		
-		if("".equals(id) || id == null){
+		if("".equals(id) || id == null){//加载根节点
 			ProjectAndRound root = projectAndRoundBiz.getRoot();
 			ProjectAndRoundDTO parDTO = new ProjectAndRoundDTO();
 			parDTO.setId(root.getId());
@@ -54,7 +54,7 @@ public class ProjectAndRoundController {
 			
 			dtoList.add(parDTO);
 		}
-		else {
+		else {//加载点击节点
 			List<ProjectAndRound> list = projectAndRoundBiz.getChildrenByPid(id);
 			for (ProjectAndRound par:list) {
 				ProjectAndRoundDTO parDTO = new ProjectAndRoundDTO();
@@ -68,10 +68,8 @@ public class ProjectAndRoundController {
 				if(projectAndRoundBiz.getChildrenByPid(par.getId()).size() > 0){
 					
 					parDTO.setState("closed");
-					//System.out.println("closed");
 				} else {
 					parDTO.setState("open");
-					//System.out.println("open");
 				}
 				
 				Map<String, Object>  map = new HashMap<String, Object>();

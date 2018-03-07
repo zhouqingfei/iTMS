@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `itms_project_round` (
   `url` varchar(50) DEFAULT NULL,
   `icon` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8;
 
 -- 正在导出表  giit.itms_project_round 的数据：~5 rows (大约)
 /*!40000 ALTER TABLE `itms_project_round` DISABLE KEYS */;
@@ -127,7 +127,9 @@ INSERT INTO `itms_project_round` (`id`, `parent_id`, `name`, `type`, `testCaseLi
 	(76, '1', 'BIOS3', 'project', 'test', 0, '/itmsTestCase.do/testTable.view', 'test'),
 	(168, '76', '2', 'round', '92,93', 0, '/itmsTestCase.do/testTable.view', ''),
 	(169, '76', '1', 'round', '92,93,94,95,96,97', 0, '/itmsTestCase.do/testTable.view', ''),
-	(999, '99', 'test', 'round', '92,93,94,95,96,97', 0, '/itmsTestCase.do/testTable.view', 'test');
+	(999, '99', 'test', 'round', '92,93,94,95,96,97', 0, '/itmsTestCase.do/testTable.view', 'test'),
+	(1000, '1', 'BIOS3', 'project', 'test', 0, '/itmsTestCase.do/testTable.view', 'test'),
+	(1002, '76', '3', 'round', '', 0, '/itmsTestCase.do/testTable.view', '');
 /*!40000 ALTER TABLE `itms_project_round` ENABLE KEYS */;
 
 -- 导出  表 giit.itms_test_case 结构
@@ -184,6 +186,29 @@ INSERT INTO `itms_test_case` (`itms_test_case_id`, `itms_test_case_name`, `itms_
 	(110, 'POST - Hot Key Check - F12', '1.1.1.4', 'V1.0', '张晓涛', 'BIOS(insyde)', 'POST', 'Hot Key', 'Level1', '所有使用insydeI   BIOS的服务器', '12.0', '0.0', '可用', 'V1.0  张晓涛2017.7.27 新建', '常规开机配置，网卡接入DHCP服务器网线', '无', '无', '上电开机，在POST过程中，按下F12键，验证其功能及提示信息', '1.POST logo下面的按键提示信息消失，按压后的提示信息显示为“Entering PXE Boot...”.\n2.系统进入PXE Boot，确保Legacy和UEFI模式下各网口均可进行PXE引导.', NULL, NULL, NULL, NULL, NULL, NULL),
 	(111, 'POST - Hot Key Check - Tab', '1.1.1.5', 'V1.0', '张晓涛', 'BIOS(insyde)', 'POST', 'Hot Key', 'Level1', '所有使用insydeI   BIOS的服务器', '2.0', '0.0', '待修改', 'V1.0  张晓涛2017.7.27 新建', '常规开机配置', '无', '无', '上电开机，在POST过程中，按下TAB键，验证其功能及提示信息', '不显示提示信息，logo会消失，开始显示Post过程信息,系统出现诊断信息，logo不再出现', NULL, NULL, NULL, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `itms_test_case` ENABLE KEYS */;
+
+-- 导出  表 giit.itms_test_case_tree 结构
+CREATE TABLE IF NOT EXISTS `itms_test_case_tree` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` varchar(32) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `type` varchar(32) DEFAULT NULL,
+  `testCaseList` varchar(50) DEFAULT NULL,
+  `checked` int(11) DEFAULT '0',
+  `url` varchar(50) DEFAULT NULL,
+  `icon` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  giit.itms_test_case_tree 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `itms_test_case_tree` DISABLE KEYS */;
+INSERT INTO `itms_test_case_tree` (`id`, `parent_id`, `name`, `type`, `testCaseList`, `checked`, `url`, `icon`) VALUES
+	(1, '0', '所有用例', 'root', NULL, 1, NULL, NULL),
+	(2, '1', 'BIOS(insyde)', 'level1', NULL, 0, NULL, NULL),
+	(3, '2', 'POST', 'level2', NULL, 0, NULL, NULL),
+	(4, '3', 'Information/Config/Logo', 'level3', NULL, 0, NULL, NULL),
+	(5, '3', 'Hot Key', 'level3', NULL, 0, NULL, NULL);
+/*!40000 ALTER TABLE `itms_test_case_tree` ENABLE KEYS */;
 
 -- 导出  表 giit.itms_test_task 结构
 CREATE TABLE IF NOT EXISTS `itms_test_task` (
