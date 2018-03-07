@@ -19,152 +19,165 @@
 		<script>
 			 var basePath = "${pageContext.request.contextPath}";
 		 	 var treeUrl = "${pageContext.request.contextPath}" + "/projectAndRound.do/loadTree";    
-			 $(function() {
-				 	var selectedNodeId;
-		            $('#projectTree').tree({
-		                url: treeUrl,
-		                //checkbox: true,
-		                
-		                onContextMenu: function(e,node){
-							//禁止浏览器的菜单打开
-							e.preventDefault();
-							$(this).tree('select',node.target);
-							$('#projectMenu').menu('show', {
-								left: e.pageX,
-								top: e.pageY
-							});
-						},
-						onClick:function(node){
-							var parentNode=$('#projectTree').tree('getParent',node.target);
-							
-							var title = parentNode.text + ">" + node.text;
-							//alert(parentNode.text);
-							var tabUrl;
-							//console.info(node);
-							if (node.attributes.url) {
-								tabUrl = basePath + node.attributes.url + "?testCaseList=" + node.attributes.testCaseList;
-								//alert(tabUrl);
-								addTab(title,tabUrl,title+node.id);
-							}
-						},
-
-						onLoadSuccess:function(){
-							$(this).tree('expand',$(this).tree('getRoot').target);
-							if(selectedNodeId != null){
-								var selectNode = $('#projectTree').tree('find', selectedNodeId);   
-					            $('#projectTree').tree('select', selectNode.target);
-							}
-						},
+		 	 var caseUrl = "${pageContext.request.contextPath}" + "/itmsTestCaseTree.do/loadTree";    
+		 	 $(function() {
+		 		 
+		 		var caseSelectedNodeId;
+			    $('#caseTree').tree({
+		            url: caseUrl,
+		            onLoadSuccess:function(){
+						$(this).tree('expand',$(this).tree('getRoot').target);
+						if(caseSelectedNodeId != null){
+							var selectNode = $('#caseTree').tree('find', caseSelectedNodeId);   
+				            $('#caseTree').tree('select', selectNode.target);
+						}
+					}
+		        });
+			 
+			 
+			 	var projectSelectedNodeId;
+	            $('#projectTree').tree({
+	                url: treeUrl,	            
+	                onContextMenu: function(e,node){
+						//禁止浏览器的菜单打开
+						e.preventDefault();
+						$(this).tree('select',node.target);
+						$('#projectMenu').menu('show', {
+							left: e.pageX,
+							top: e.pageY
+						});
+					},
+					onClick:function(node){
+						var parentNode=$('#projectTree').tree('getParent',node.target);
 						
-						onSelect:function(node){
-							selectedNodeId = node.id;
-							//alert(selectedNodeId);
+						var title = parentNode.text + ">" + node.text;
+						//alert(parentNode.text);
+						var tabUrl;
+						//console.info(node);
+						if (node.attributes.url) {
+							tabUrl = basePath + node.attributes.url + "?testCaseList=" + node.attributes.testCaseList;
+							//alert(tabUrl);
+							addTab(title,tabUrl,title+node.id);
 						}
-		            });
-		            
-		            $('#savebtn').click(function(){
-						if(flag == 'add'){
-							var node = $('#projectTree').tree('getSelected');
-							var id = node.id;
-							var type = "project";
-							var state = "open";
-							var parentType = node.attributes.type;
-							if(parentType == "root"){
-								type = "project";
-							}
-							else if(parentType == "project"){
-								type = "round";
-							}
-							
-							$('#projectTree').tree('append',{
-								parent:node.target ,
-								data:[{
-									text: $('#myform').find('input[name=name]').val() ,
-									state:state,
-									attributes:{
-										url:"/itmsTestCase.do/testTable.view",
-										testCaseList:"",
-										type:type
-									}
-								}]
-							});
-							
-							$.ajax({
-								type:'post' ,
-								url:"${pageContext.request.contextPath}" + "/projectAndRound.do/save",
-								cache:false , 
-								data:{
-									parentId:node.id,
-									name:$('#myform').find('input[name=name]').val() ,
-									url:"/itmsTestCase.do/testTable.view",
-									type:type
-								} ,
-								dataType:'text',
-								success:function(result){
-									if(result == "insert success"){
-										$.messager.show({
-											title:'提示信息',
-											msg:'新增成功!'
-										});
-										//刷新节点 (一定是选中节点的父级节点)
-										var node = $('#projectTree').tree('getSelected');
-										var parent = $('#projectTree').tree('getParent' ,node.target);
-										$('#projectTree').tree('reload',node.target);		
-									}
-								},
-								fail:function(result){
-									$.messager.show({
-										title:'提示信息',
-										msg:'操作失败!'
-									});
-								}
-							}); 
+					},
 
-							$('#mydiv').dialog('close'); 
-						} else {
-							
-							var node = $('#projectTree').tree('getSelected');
-							var id = node.id;
-							
-							$.ajax({
-								type:'post' ,
-								url:"${pageContext.request.contextPath}" + "/projectAndRound.do/update",
-								cache:false , 
-								data:{
-									id:id,
-									name:$('#myform').find('input[name=name]').val()
-								} ,
-								dataType:'text',
-								success:function(result){
-									//刷新节点 (一定是选中节点的父级节点)
-									if(result == "update success"){
-										$.messager.show({
-											title:'提示信息',
-											msg:'修改成功!'
-										});
-										//selectedNodeId = id;
-										//alert(selectedNodeId);
-										var parentNode = $('#projectTree').tree('getParent' ,node.target);
-										$('#projectTree').tree('reload',parentNode.target);								      
-									}
-								},
-								fail:function(result){
+					onLoadSuccess:function(){
+						$(this).tree('expand',$(this).tree('getRoot').target);
+						if(projectSelectedNodeId != null){
+							var selectNode = $('#projectTree').tree('find', projectSelectedNodeId);   
+				            $('#projectTree').tree('select', selectNode.target);
+						}
+					},
+					
+					onSelect:function(node){
+						projectSelectedNodeId = node.id;
+						//alert(projectSelectedNodeId);
+					}
+	            });
+		            
+	            $('#savebtn').click(function(){
+					if(flag == 'add'){
+						var node = $('#projectTree').tree('getSelected');
+						var id = node.id;
+						var type = "project";
+						var state = "open";
+						var parentType = node.attributes.type;
+						if(parentType == "root"){
+							type = "project";
+						}
+						else if(parentType == "project"){
+							type = "round";
+						}
+						
+						$('#projectTree').tree('append',{
+							parent:node.target ,
+							data:[{
+								text: $('#myform').find('input[name=name]').val() ,
+								state:state,
+								attributes:{
+									url:"/itmsTestCase.do/testTable.view",
+									testCaseList:"",
+									type:type
+								}
+							}]
+						});
+						
+						$.ajax({
+							type:'post' ,
+							url:"${pageContext.request.contextPath}" + "/projectAndRound.do/save",
+							cache:false , 
+							data:{
+								parentId:node.id,
+								name:$('#myform').find('input[name=name]').val() ,
+								url:"/itmsTestCase.do/testTable.view",
+								type:type
+							} ,
+							dataType:'text',
+							success:function(result){
+								if(result == "insert success"){
 									$.messager.show({
 										title:'提示信息',
-										msg:'操作失败!'
+										msg:'新增成功!'
 									});
+									//刷新节点 (一定是选中节点的父级节点)
+									var node = $('#projectTree').tree('getSelected');
+									var parent = $('#projectTree').tree('getParent' ,node.target);
+									$('#projectTree').tree('reload',node.target);		
 								}
-							}); 
-							
-							$('#mydiv').dialog('close');
-						}
-					});
-					
-					$('#cancelbtn').click(function(){
-							$('#mydiv').dialog('close'); 
-					});
-		            
-		        })
+							},
+							fail:function(result){
+								$.messager.show({
+									title:'提示信息',
+									msg:'操作失败!'
+								});
+							}
+						}); 
+
+						$('#mydiv').dialog('close'); 
+					} else {
+						
+						var node = $('#projectTree').tree('getSelected');
+						var id = node.id;
+						
+						$.ajax({
+							type:'post' ,
+							url:"${pageContext.request.contextPath}" + "/projectAndRound.do/update",
+							cache:false , 
+							data:{
+								id:id,
+								name:$('#myform').find('input[name=name]').val()
+							} ,
+							dataType:'text',
+							success:function(result){
+								//刷新节点 (一定是选中节点的父级节点)
+								if(result == "update success"){
+									$.messager.show({
+										title:'提示信息',
+										msg:'修改成功!'
+									});
+									//projectSelectedNodeId = id;
+									//alert(projectSelectedNodeId);
+									var parentNode = $('#projectTree').tree('getParent' ,node.target);
+									$('#projectTree').tree('reload',parentNode.target);								      
+								}
+							},
+							fail:function(result){
+								$.messager.show({
+									title:'提示信息',
+									msg:'操作失败!'
+								});
+							}
+						}); 
+						
+						$('#mydiv').dialog('close');
+					}
+				});
+				
+				$('#cancelbtn').click(function(){
+						$('#mydiv').dialog('close'); 
+				});
+	            
+	        })
 		        
 		        
 		     function append(){
@@ -227,7 +240,7 @@
 				var nodeId = node.id;
 				//var parentNode = $('#projectTree').tree('getParent' ,node.target);
 				//var parentNodeId = parentNode.id;
-				selectedNodeId = null;
+				projectSelectedNodeId = null;
 				
 				$('#projectTree').tree('remove' , node.target);
 				
@@ -298,6 +311,11 @@
 	    <!-- idebar -->
 	    <div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:'导航菜单'">
 	        <div class="easyui-accordion" data-options="border:false,fit:true">
+	        	<div title="用例管理" data-options="iconCls:'icon-application-cascade'" style="padding:5px;">
+	                <ul id="caseTree"></ul>	        
+	            </div>
+	        
+	        
 	            <div title="项目管理" data-options="iconCls:'icon-application-cascade'" style="padding:5px;">
 	                <ul id="projectTree"></ul>
 	                
@@ -326,6 +344,8 @@
 						<div onclick="remove()">删除</div>
 					</div>  	
 	            </div>
+	            
+	             
 	        </div>
 	    </div>
 
