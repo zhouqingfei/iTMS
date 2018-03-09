@@ -414,11 +414,7 @@
 	        </div>
 	    </div> --%>
 		
-<<<<<<< HEAD
 		<div id="mainPanle" region="center" fit="true" border="false">
-=======
-		<div id="mainPanle" region='center' border='true'>
->>>>>>> 5d61bd637511523ada4e8667e055d99ec82f16db
 			<div id="tabs" class="easyui-tabs" fit="true" border="false">
 				
 			</div> 
