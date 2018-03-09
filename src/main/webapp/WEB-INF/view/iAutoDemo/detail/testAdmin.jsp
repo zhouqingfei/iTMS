@@ -356,7 +356,7 @@
 	        </div>
 	    </div> --%>
 		
-		<div id="mainPanle" region="center" border="true" border="false">
+		<div id="mainPanle" region="center" fit="true" border="false">
 			<div id="tabs" class="easyui-tabs" fit="true" border="false">
 				
 			</div> 
