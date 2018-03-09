@@ -19,4 +19,6 @@ public interface ProjectAndRoundDao {
 	public void delete(int id);
 	
 	public void deleteByParentId(int parentId);
+	
+	public ProjectAndRound findById(int id);
 }

@@ -9,6 +9,7 @@ public interface ProjectAndRoundBiz {
 	public ProjectAndRound getRoot();
 	public void save(ProjectAndRound projecrAndRound);
 	public List<ProjectAndRound> findAll();
+	public ProjectAndRound findById(int id);
 	
 	public void update(ProjectAndRound projectAndRound);
 	
