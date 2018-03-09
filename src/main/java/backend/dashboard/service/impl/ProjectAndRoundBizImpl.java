@@ -35,7 +35,12 @@ public class ProjectAndRoundBizImpl implements ProjectAndRoundBiz {
 	public List<ProjectAndRound> findAll() {
 		return projectAndRoundDao.findAll();
 	}
-
+	
+	@Override
+	public ProjectAndRound findById(int id) {
+		return projectAndRoundDao.findById(id);
+	}
+	
 	@Override
 	public void update(ProjectAndRound projectAndRound) {
 		projectAndRoundDao.update(projectAndRound);
@@ -46,5 +51,5 @@ public class ProjectAndRoundBizImpl implements ProjectAndRoundBiz {
 		projectAndRoundDao.deleteByParentId(id);
 		projectAndRoundDao.delete(id);
 	}
-	
+
 }

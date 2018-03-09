@@ -34,7 +34,10 @@
 	<select id="findAll" resultMap="BaseResultMap">
 		SELECT * FROM itms_project_round
 	</select>
-	
+
+	<select id="findById" parameterType="int" resultMap="BaseResultMap">
+	select * from itms_project_round where id = #{value};
+	</select>
 	
 	<update id="update" parameterType="ProjectAndRound">
 		UPDATE itms_project_round SET name = #{name} WHERE id = #{id}

@@ -1,6 +1,9 @@
 package backend.dashboard.contorller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -20,6 +23,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,6 +44,7 @@ import backend.dashboard.service.ItmsTestCaseBiz;
 import backend.dashboard.service.ProjectAndRoundBiz;
 import backend.entity.ItmsTestCase;
 import backend.entity.ItmsTestTask;
+import backend.entity.ProjectAndRound;
 
 class ItmsTestCaseScriptInfo {
 	int id;
@@ -111,6 +117,8 @@ public class ItmsTestCaseController {
 	@Resource(name = "projectAndRoundBizImpl")
 	private ProjectAndRoundBiz projectAndRoundBiz;
 
+	Logger logger = LoggerFactory.getLogger(ItmsTestCaseController.class);
+	
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	@ResponseBody
 	List<ItmsTestCaseScriptInfo> updateTestCase(@RequestBody List<ItmsTestCase> testCaseList) {
@@ -194,8 +202,8 @@ public class ItmsTestCaseController {
 	@RequiresRoles("admin")
 	@RequestMapping("testTable.view")
 	public String treeTable(HttpServletRequest request,Model model) {
-		System.out.println(request.getParameter("testCaseList"));
-		model.addAttribute("testCaseList", request.getParameter("testCaseList"));
+		System.out.println(request.getParameter("testId"));
+		model.addAttribute("testId", request.getParameter("testId"));
 		return "/iAutoDemo/detail/testTable";
 	}
 
@@ -319,62 +327,69 @@ public class ItmsTestCaseController {
 		int currentPage = Integer.parseInt(request.getParameter("page"));
 		int pageSize = Integer.parseInt(request.getParameter("rows"));
 		//System.out.println(request.getParameter("testCaseList") + "11111111111111");
-		String testCaseList = request.getParameter("testCaseList");
-		String[] list = testCaseList.split(",");
-		int[] caseIdList =  new int[list.length];
-		List<ItmsTestCase> tempCaseList = new ArrayList<ItmsTestCase>();
-		
-		for(int i = 0; i < list.length;i++) {
-			//caseIdList[i] = Integer.parseInt(list[i]);
-			tempCaseList.add(itmsTestCaseBiz.findById(Integer.parseInt(list[i])));
-		}
-		
-		
-		List<ItmsTestCase> caseList = new ArrayList<ItmsTestCase>();
-		System.out.println(String.format("~~~~~~ in getTestCaseList handler, currentPage: %d; pageSize: %d.",
-				currentPage, pageSize));
-		int from = (currentPage - 1) * pageSize;
-		int count = pageSize;
-        
-		int to = from;
-		if(from + count > tempCaseList.size()) {
-			to = tempCaseList.size();
-		}
-		else {
-			to = from + count;
-		}
-		for(int i = from; i < to;i++) {
-			caseList.add(tempCaseList.get(i));
-		}
-		 //= itmsTestCaseBiz.findByPagination(from, count);
-		List<Integer> ids = new ArrayList<>();
-		for (ItmsTestCase cas : caseList) {
-			ids.add(cas.getId());
-		}
-		List<ItmsTestTask> taskList = itmsTestCaseBiz.getTaskByIds(ids);
-		// merge two properties from taskcase and testTask, and result in list of map.
+		String testId = request.getParameter("testId");
 		List<Map<String, Object>> retList = new ArrayList<>();
-		int idx = 0;
-		for (ItmsTestCase cas : caseList) {
-			Map<String, Object> mer = getFieldMap(cas);
-			String casId = mer.get("id").toString();
-			if (idx < taskList.size()) {
-				ItmsTestTask task = taskList.get(idx);
-				String taskCasId = String.valueOf(task.getId());
-				if (casId.equals(taskCasId)) {
-					Map<String, Object> oth = getFieldMap(task);
-					for (String key : oth.keySet()) {
-						mer.putIfAbsent(key, oth.get(key));
-					}
-
-					idx++;
-				}
+		int totalNum = 0;
+		ProjectAndRound par = projectAndRoundBiz.findById(Integer.valueOf(testId));
+		String testCaseList = par.getTestCaseList();
+		
+		if(testCaseList.length() > 0) {
+			String[] list = testCaseList.split(",");
+			int[] caseIdList =  new int[list.length];
+			List<ItmsTestCase> tempCaseList = new ArrayList<ItmsTestCase>();
+			
+			for(int i = 0; i < list.length;i++) {
+				//caseIdList[i] = Integer.parseInt(list[i]);
+				tempCaseList.add(itmsTestCaseBiz.findById(Integer.parseInt(list[i])));
 			}
-			retList.add(mer);
+			
+			
+			List<ItmsTestCase> caseList = new ArrayList<ItmsTestCase>();
+			System.out.println(String.format("~~~~~~ in getTestCaseList handler, currentPage: %d; pageSize: %d.",
+					currentPage, pageSize));
+			int from = (currentPage - 1) * pageSize;
+			int count = pageSize;
+	        
+			int to = from;
+			if(from + count > tempCaseList.size()) {
+				to = tempCaseList.size();
+			}
+			else {
+				to = from + count;
+			}
+			for(int i = from; i < to;i++) {
+				caseList.add(tempCaseList.get(i));
+			}
+			 //= itmsTestCaseBiz.findByPagination(from, count);
+			List<Integer> ids = new ArrayList<>();
+			for (ItmsTestCase cas : caseList) {
+				ids.add(cas.getId());
+			}
+			List<ItmsTestTask> taskList = itmsTestCaseBiz.getTaskByIds(ids);
+			// merge two properties from taskcase and testTask, and result in list of map.
+			int idx = 0;
+			for (ItmsTestCase cas : caseList) {
+				Map<String, Object> mer = getFieldMap(cas);
+				String casId = mer.get("id").toString();
+				if (idx < taskList.size()) {
+					ItmsTestTask task = taskList.get(idx);
+					String taskCasId = String.valueOf(task.getId());
+					if (casId.equals(taskCasId)) {
+						Map<String, Object> oth = getFieldMap(task);
+						for (String key : oth.keySet()) {
+							mer.putIfAbsent(key, oth.get(key));
+						}
+
+						idx++;
+					}
+				}
+				retList.add(mer);
+			}
+			totalNum = tempCaseList.size();
 		}
 
 		Gson gs = new Gson();
-		String json = "{\"total\":" + tempCaseList.size() + " , \"rows\":" + gs.toJson(retList).toString() + "}";
+		String json = "{\"total\":" + totalNum + " , \"rows\":" + gs.toJson(retList).toString() + "}";
 		// System.out.println("getTestCaseList handler, ret: "+ json);
 		return json;
 	}
@@ -388,5 +403,21 @@ public class ItmsTestCaseController {
 		headers.setContentDispositionFormData("attachment", downloadFielName);
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 		return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="tmptestcase.json")
+	public @ResponseBody String getTempJsonFile() {
+		System.err.println(String.format("current directory: %s.", new File("").getAbsolutePath()));
+		File testFile = new File("tmptestcase.json");
+		try {
+			FileInputStream in = new FileInputStream(testFile);
+			int size = in.available();
+			byte[] data = new byte[size];
+			in.read(data);
+			return new String(data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

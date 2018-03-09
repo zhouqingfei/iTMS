@@ -48,16 +48,17 @@
 						});
 					},
 					onClick:function(node){
-						var parentNode=$('#projectTree').tree('getParent',node.target);
-						
-						var title = parentNode.text + ">" + node.text;
-						//alert(parentNode.text);
-						var tabUrl;
-						//console.info(node);
-						if (node.attributes.url) {
-							tabUrl = basePath + node.attributes.url + "?testCaseList=" + node.attributes.testCaseList;
-							//alert(tabUrl);
-							addTab(title,tabUrl,title+node.id);
+						if (node.attributes.type == 'config' && node.attributes.url) {
+							var parentNode=$('#projectTree').tree('getParent',node.target);
+							
+							var title = parentNode.text + ">" + node.text;
+							//alert(parentNode.text);
+							var tabUrl = basePath + node.attributes.url;
+							
+							if(node.attributes.testCaseList){
+								tabUrl += "?testId=" + node.id;
+							}
+							addTab1(title,tabUrl);
 						}
 					},
 
@@ -74,114 +75,24 @@
 						//alert(projectSelectedNodeId);
 					}
 	            });
-		            
-	            $('#savebtn').click(function(){
-					if(flag == 'add'){
-						var node = $('#projectTree').tree('getSelected');
-						var id = node.id;
-						var type = "project";
-						var state = "open";
-						var parentType = node.attributes.type;
-						if(parentType == "root"){
-							type = "project";
-						}
-						else if(parentType == "project"){
-							type = "round";
-						}
-						
-						$('#projectTree').tree('append',{
-							parent:node.target ,
-							data:[{
-								text: $('#myform').find('input[name=name]').val() ,
-								state:state,
-								attributes:{
-									url:"/itmsTestCase.do/testTable.view",
-									testCaseList:"",
-									type:type
-								}
-							}]
-						});
-						
-						$.ajax({
-							type:'post' ,
-							url:"${pageContext.request.contextPath}" + "/projectAndRound.do/save",
-							cache:false , 
-							data:{
-								parentId:node.id,
-								name:$('#myform').find('input[name=name]').val() ,
-								url:"/itmsTestCase.do/testTable.view",
-								type:type
-							} ,
-							dataType:'text',
-							success:function(result){
-								if(result == "insert success"){
-									$.messager.show({
-										title:'提示信息',
-										msg:'新增成功!'
-									});
-									//刷新节点 (一定是选中节点的父级节点)
-									var node = $('#projectTree').tree('getSelected');
-									var parent = $('#projectTree').tree('getParent' ,node.target);
-									$('#projectTree').tree('reload',node.target);		
-								}
-							},
-							fail:function(result){
-								$.messager.show({
-									title:'提示信息',
-									msg:'操作失败!'
-								});
-							}
-						}); 
-
-						$('#mydiv').dialog('close'); 
-					} else {
-						
-						var node = $('#projectTree').tree('getSelected');
-						var id = node.id;
-						
-						$.ajax({
-							type:'post' ,
-							url:"${pageContext.request.contextPath}" + "/projectAndRound.do/update",
-							cache:false , 
-							data:{
-								id:id,
-								name:$('#myform').find('input[name=name]').val()
-							} ,
-							dataType:'text',
-							success:function(result){
-								//刷新节点 (一定是选中节点的父级节点)
-								if(result == "update success"){
-									$.messager.show({
-										title:'提示信息',
-										msg:'修改成功!'
-									});
-									//projectSelectedNodeId = id;
-									//alert(projectSelectedNodeId);
-									var parentNode = $('#projectTree').tree('getParent' ,node.target);
-									$('#projectTree').tree('reload',parentNode.target);								      
-								}
-							},
-							fail:function(result){
-								$.messager.show({
-									title:'提示信息',
-									msg:'操作失败!'
-								});
-							}
-						}); 
-						
-						$('#mydiv').dialog('close');
-					}
-				});
-				
-				$('#cancelbtn').click(function(){
-						$('#mydiv').dialog('close'); 
-				});
-	            
+		        
 	        })
 		        
-		        
 		     function append(){
-				 flag = 'add';
+		 		 var node = $('#projectTree').tree('getSelected');
+		 		 var type = node.attributes.type;
+		 		 var types = ['root', 'project', 'round', 'module', 'subModule', 'config'];
+		 		 var idx = types.indexOf(type);
+		 		 if(idx > -1 && idx < types.length - 1){
+		 			 $('#myAddDlg').dialog({
+		 				 title:'新增' + types[idx + 1]
+		 			 });
+		 			 $('#myAddDlg').dialog('open');
+		 		 }
+		 	 } 
+		 	 /*
+		     function append(){
+				 dialogFlag = 'add';
 				 
 				 var node = $('#projectTree').tree('getSelected');
 			
@@ -204,13 +115,18 @@
 						 msg:"只能增加项目或轮次"
 					 })
 				 }					 
-			 }
-			 
+			 } */
+		 	 function rename(){
+		 		 var node = $("#projectTree").tree('getSelected');
+		 		 var nodeType = node.attributes.type;
+		 		 $("#myRenameDlg").find('input[id="name"]').val(node.text);
+		 		 $("#myRenameDlg").dialog('open');
+		 	 }
+		 	 /*
 			 function edit(){
-				 flag = 'edit';
+				 dialogFlag = 'edit';
 				 
 				 var node = $('#projectTree').tree('getSelected');
-
 				 var nodeType = node.attributes.type;
 				 if(nodeType == "project"){	 
 					 $('#mydiv').dialog({
@@ -232,8 +148,111 @@
 						 msg:"只能编辑项目或轮次"
 					 })
 				 }					 
+			 }*/
+			 
+			 function addTreeNode(){
+				var node = $('#projectTree').tree('getSelected');
+				var id = node.id;
+		 		 var types = ['root', 'project', 'round', 'module', 'subModule', 'config'];
+				var parentType = node.attributes.type;
+				var idx = types.indexOf(parentType);
+				if(idx > -1 && idx < types.length - 1){
+					var type = types[idx+1];
+					var url = "";
+					if(type == 'config'){
+						url = "/itmsTestCase.do/testTable.view";
+					}
+					$.ajax({
+						type:'post' ,
+						url:"${pageContext.request.contextPath}" + "/projectAndRound.do/save",
+						cache:false , 
+						data:{
+							parentId:node.id,
+							name:$('#myAddDlg').find('input[name=name]').val() ,
+							url: url,
+							type: type
+						} ,
+						dataType:'text',
+						success:function(result){
+							if(result == "insert success"){
+								$.messager.show({
+									title:'提示信息',
+									msg:'新增成功!'
+								});
+								//刷新节点 (一定是选中节点的父级节点)
+								//var node = $('#projectTree').tree('getSelected');
+								//var parent = $('#projectTree').tree('getParent' ,node.target);
+								var n = node;
+								if($('#projectTree').tree('isLeaf', node.target)){
+									n = $('#projectTree').tree('getParent', node.target);
+								}
+								$('#projectTree').tree('reload', n.target);		
+							}
+						},
+						fail:function(result){
+							$.messager.show({
+								title:'提示信息',
+								msg:'操作失败!'
+							});
+						}
+					}); 
+
+				}
+				
+			/*	$('#projectTree').tree('append',{
+					parent:node.target ,
+					data:[{
+						text: $('#myform').find('input[name=name]').val() ,
+						state:state,
+						attributes:{
+							url:"/itmsTestCase.do/testTable.view",
+							testCaseList:"",
+							type:type
+						}
+					}]
+				});*/
+				
+				$('#myAddDlg').dialog('close'); 
 			 }
 			 
+			 function renameTreeNode(){
+					var node = $('#projectTree').tree('getSelected');
+					var id = node.id;
+					
+					$.ajax({
+						type:'post' ,
+						url:"${pageContext.request.contextPath}" + "/projectAndRound.do/update",
+						cache:false , 
+						data:{
+							id:id,
+							name:$('#myRenameDlg').find('input[name=name]').val()
+						} ,
+						dataType:'text',
+						success:function(result){
+							//刷新节点 (一定是选中节点的父级节点)
+							if(result == "update success"){
+								$.messager.show({
+									title:'提示信息',
+									msg:'修改成功!'
+								});
+								//projectSelectedNodeId = id;
+								//alert(projectSelectedNodeId);
+								var parentNode = $('#projectTree').tree('getParent' ,node.target);
+								$('#projectTree').tree('reload',parentNode.target);						      
+							}
+						},
+						fail:function(result){
+							$.messager.show({
+								title:'提示信息',
+								msg:'操作失败!'
+							});
+						}
+					}); 
+					
+					$('#myRenameDlg').dialog('close');
+			 }
+
+
 			 function remove(){
 				//前台删除
 				var node = $('#projectTree').tree('getSelected');
@@ -292,6 +311,29 @@
 			            $('#projectTree').tree('select', selectNode.target);
 					}  
 			 }
+			 
+			 function addTab1(title, url){
+					var content = '<iframe scrolling="auto" frameborder="0"  src="' + url
+					+ '" style="width:100%;height:100%;"></iframe>';
+					var tabs;
+					if ($('#tabs').tabs('exists', title)) {
+						$('#tabs').tabs('select', title);// 选中并刷新
+						var currTab = $('#tabs').tabs('getSelected');
+						tabs = $('#tabs').tabs('update', {
+							tab : currTab,
+							options : {
+								content : content
+							}
+						});
+					} else {
+						tabs = $('#tabs').tabs('add', {
+							title : title,
+							content : content,
+							closable : true
+						});
+
+					}
+			 }
 		</script>
 		
 	</head>
@@ -317,11 +359,12 @@
 	        
 	        
 	            <div title="项目管理" data-options="iconCls:'icon-application-cascade'" style="padding:5px;">
+	            	<!--define tree: /project/round/module/submodule/config/ -->
 	                <ul id="projectTree"></ul>
 	                
-	                <div id="mydiv" title="" class="easyui-dialog" style="width:300px;" closed=true >
+	                <div id="myAddDlg" title="" class="easyui-dialog" style="width:300px;" closed=true >
 		  				<form id="myform" method="post">
-	  						<input type="hidden" name="id" value="" />
+	  						<input name="id" type="hidden" value="" />
 	  						<input id="parent_id" type="hidden" value="" />
   							<table> 
   								<tr align="center">
@@ -330,17 +373,32 @@
   								</tr>
   								<tr align="center">
   									<td colspan="2">
-  										<a style="margin-left:50px;" id="savebtn" class="easyui-linkbutton">确定</a>
-  										<a style="margin-left:10px;" id="cancelbtn" class="easyui-linkbutton">取消</a>
+  										<a style="margin-left:50px;" id="savebtn" class="easyui-linkbutton" onclick='addTreeNode()'>确定</a>
+  										<a style="margin-left:10px;" id="cancelbtn" class="easyui-linkbutton" onclick='$("#myAddDlg").dialog("close")'>取消</a>
   									</td>
   								</tr>  								  								
   							</table>
 		  				</form>	
 			  		</div>
+			  		
+			  		<div id="myRenameDlg" title="重命名节点元素" class="easyui-dialog" style="width:300px;" closed=true>
+						<table>
+							<tr align="center">
+								<td style="padding-left:20px;">名称:</td>
+								<td><input style="width:185px;" type="text" id="name" name="name" value=""/></td>
+							</tr>
+							<tr align="center">
+								<td colspan="2">
+									<a style="margin-left:50px;" class="easyui-linkbutton" onclick='renameTreeNode()'>确定</a>
+									<a style="margin-left:10px;" class="easyui-linkbutton" onclick="$('#myRenameDlg').dialog('close')">取消</a>
+								</td>
+							</tr>  								  								
+						</table>			  		
+			  		</div>
 	                
 	                <div id="projectMenu" class="easyui-menu" style="width:150px;">
 						<div onclick="append()">新增</div>
-						<div onclick="edit()">编辑</div>
+						<div onclick="rename()">编辑</div>
 						<div onclick="remove()">删除</div>
 					</div>  	
 	            </div>
@@ -356,7 +414,7 @@
 	        </div>
 	    </div> --%>
 		
-		<div id="mainPanle" region="center" border="true" border="false">
+		<div id="mainPanle" region='center' border='true'>
 			<div id="tabs" class="easyui-tabs" fit="true" border="false">
 				
 			</div> 
